@@ -1,7 +1,6 @@
 
-let _ = require( 'wTools' );
+let _ = require( 'wremote' );
 
 /**/
 
-...
-
+___
