@@ -44,10 +44,7 @@ function basic( test )
   let a = test.assetFor();
   let centerPath = a.path.nativize( a.abs( 'Center.s' ) );
   let toolsPath = a.path.nativize( _.module.toolsPathGet() );
-
-  debugger;
   let remotePath = a.path.nativize( _.module.resolve( 'wRemote' ) ); /* qqq xxx : cover this case of routine _.module.resolve */
-  debugger;
 
   a.reflect();
 
