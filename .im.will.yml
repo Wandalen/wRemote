@@ -5,6 +5,32 @@ submodule :
   wTools :
     path : npm:///wTools
     enabled : 0 # submodule
+  wCopyable :
+    path : npm:///wCopyable
+    enabled : 0 # submodule
+  wEventHandler :
+    path : npm:///wEventHandler
+    enabled : 0 # submodule
+  wFiles :
+    path : npm:///wFiles
+    enabled : 0 # submodule
+  wConsequence :
+    path : npm:///wConsequence
+    enabled : 0 # submodule
+  wAppBasic :
+    path : npm:///wappbasic
+    enabled : 0 # submodule
+
+  wTesting :
+    path : npm:///wTesting
+    enabled : 0 # submodule
+    criterion :
+      debug : 1
+  wpuppet :
+    path : npm:///wpuppet
+    enabled : 0 # submodule
+    criterion :
+      debug : 1
 
 path :
 
