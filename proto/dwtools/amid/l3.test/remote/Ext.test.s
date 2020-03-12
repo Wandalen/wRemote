@@ -45,6 +45,10 @@ function basic( test )
   let centerPath = a.path.nativize( a.abs( 'Center.s' ) );
   let toolsPath = a.path.nativize( _.module.toolsPathGet() );
 
+  debugger;
+  let remotePath = a.path.nativize( _.module.resolve( 'wRemote' ) ); /* qqq xxx : cover this case of routine _.module.resolve */
+  debugger;
+
   a.reflect();
 
   /* - */
@@ -61,7 +65,7 @@ function basic( test )
   /* */
 
   debugger;
-  a.js({ execPath : centerPath, env : { _TOOLS_PATH_ : toolsPath } })
+  a.js({ execPath : centerPath, env : { _TOOLS_PATH_ : toolsPath, _REMOTE_PATH_ : remotePath } })
 
   .then( ( got ) =>
   {
@@ -70,6 +74,10 @@ function basic( test )
 
     test.identical( _.strCount( got.output, 'slave . slaveConnectBegin. Attempt 1 / 2' ), 1 );
     test.identical( _.strCount( got.output, 'slave . start' ), 1 );
+
+    test.identical( _.strCount( got.output, 'slave . recieved . Message from master' ), 1 );
+    test.identical( _.strCount( got.output, 'master . recieved . Message from slave' ), 1 );
+
     test.identical( _.strCount( got.output, 'slave . exit' ), 1 );
 
     return null;

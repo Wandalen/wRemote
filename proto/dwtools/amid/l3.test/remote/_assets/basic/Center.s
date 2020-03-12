@@ -3,11 +3,12 @@
 'use strict';
 
 var _ToolsPath_ = process.env._TOOLS_PATH_;
+var _RemotePath_ = process.env._REMOTE_PATH_;
 
 if( typeof module !== 'undefined' )
 {
   var _ = require( _ToolsPath_ );
-  _.include( 'wRemote' );
+  _.include( _RemotePath_ );
   module.exports = _;
 }
 
@@ -77,6 +78,7 @@ function form()
 
   center.flock.on( 'connectEnd', () =>
   {
+    if( center.flock.connections.length === 1 )
     center.flock.send( `Message from ${center.flock.role}` );
   });
 

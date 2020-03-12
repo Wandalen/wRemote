@@ -177,7 +177,7 @@ function connectionDefaultGet()
 {
   let flock = this;
   let logger = flock.logger;
-  _.assert( flock.role === 'slave' );
+  // _.assert( flock.role === 'slave' );
   _.assert( flock.connections.length === 1 );
   return flock.connections[ 0 ];
 }
