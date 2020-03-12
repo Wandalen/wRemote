@@ -1,32 +1,26 @@
 {
-  "name": "wremote",
-  "version": "0.3.1",
-  "description": "Abstract interface of connection between several procedures",
-  "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
-  "license": "MIT",
-  "main": "proto/dwtools/amid/l3/rmeote/Include.s",
-  "files": [
-    "proto/dwtools/amid/l3",
-    "proto/dwtools/Tools.s"
-  ],
-  "scripts": {
-    "test": "wtest .run proto",
-    "docgen": "wdocgen .build proto"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https ://github.com/Wandalen/wRemote.git"
-  },
-  "bugs": {
-    "url": "https ://github.com/Wandalen/wRemote/issues"
-  },
-  "dependencies": {
-    "wTools": "alpha"
-  },
-  "devDependencies": {
-    "wTesting": "alpha"
-  },
-  "keywords": [
-    "wTools"
-  ]
+  "name" : "wremote", 
+  "version" : "0.3.2", 
+  "description" : "Abstract interface of connection between several procedures", 
+  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
+  "license" : "MIT", 
+  "main" : "proto/dwtools/amid/l3/rmeote/Include.s", 
+  "files" : [ "proto/dwtools/amid/l3", "proto/dwtools/Tools.s" ], 
+  "scripts" : { "test" : "wtest .run proto", "docgen" : "wdocgen .build proto" }, 
+  "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wRemote.git" }, 
+  "bugs" : 
+  {
+    "url" : "https ://github.com/Wandalen/wRemote/issues"
+  }, 
+  "dependencies" : 
+  {
+    "wcopyable" : "", 
+    "weventhandler" : "", 
+    "wAppBasic" : "", 
+    "wTools" : "alpha", 
+    "wFiles" : "alpha", 
+    "wConsequence" : "alpha"
+  }, 
+  "devDependencies" : { "wPuppet" : "", "wTesting" : "alpha" }, 
+  "keywords" : [ "wTools" ]
 }
