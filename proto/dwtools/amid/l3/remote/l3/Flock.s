@@ -1,4 +1,4 @@
-( function _Flock_ss_() {
+( function _Flock_s_() {
 
 'use strict';
 
@@ -9,10 +9,6 @@ if( typeof module !== 'undefined' )
 
 //
 
-let Express = null;
-let ExpressLogger = null;
-let ExpressDir = null;
-let Querystring = null;
 let _ = _global_.wTools;
 let Parent = null;
 let Self = function wFlock( o )
@@ -25,6 +21,32 @@ Self.shortName = 'Flock';
 // --
 // inter
 // --
+
+function finit()
+{
+  let flock = this;
+  flock.unform();
+  _.Copyable.prototype.finit.call( flock );
+}
+
+//
+
+function init( o )
+{
+  let flock = this;
+
+  _.assert( arguments.length === 1 );
+
+  _.workpiece.initFields( flock );
+  Object.preventExtensions( flock );
+
+  if( o )
+  flock.copy( o );
+
+  return flock;
+}
+
+//
 
 function unform()
 {
@@ -70,14 +92,16 @@ function form()
     {
 
       if( !flock.masterPath )
-      ready.then( () => flock.slaveOpenMaster() );
-
+      {
+        ready.then( () => flock.slaveOpenMaster() );
+        ready.then( () => _.time.out( flock.slaveDelay ) );
+      }
       ready.then( () => flock.slaveConnectMaster() );
 
     }
     else
     {
-      // ready.then( () => _.time.out( 1000 ) );
+      ready.then( () => _.time.out( flock.masterDelay ) );
       ready.then( () => flock.masterOpen() );
     }
 
@@ -88,59 +112,7 @@ function form()
 }
 
 // --
-// worker
-// --
-
-function workerOpen( o )
-{
-  let flock = this;
-  let logger = flock.logger;
-
-  _.routineOptions( workerOpen, o );
-
-  debugger;
-
-  if( flock.role === 'master' )
-  {
-
-    return flock.masterSlaveOpen()
-    .then( ( slaveFlock ) =>
-    {
-      debugger;
-      return slaveFlock.object;
-    });
-
-  }
-  else
-  {
-
-    let body =
-    {
-      object : 'flock',
-      routine : 'workerOpen',
-      args : [],
-    }
-
-    return flock.request
-    ({
-      deserialized :
-      {
-        channel : 'call',
-        recipient : 'master',
-        body : body,
-      },
-    });
-
-  }
-
-}
-
-workerOpen.defaults =
-{
-}
-
-// --
-// common
+// etc
 // --
 
 function close()
@@ -163,10 +135,17 @@ function close()
 
 //
 
+function connectionIs( connection )
+{
+  let flock = this;
+  return _.objectIs( connection );
+}
+
+//
+
 function connectionIsAlive( connection )
 {
   let flock = this;
-  let logger = flock.logger;
   _.assert( connection.destroyed !== undefined );
   return !connection.destroyed;
 }
@@ -176,71 +155,312 @@ function connectionIsAlive( connection )
 function connectionDefaultGet()
 {
   let flock = this;
-  let logger = flock.logger;
-  // _.assert( flock.role === 'slave' );
   _.assert( flock.connections.length === 1 );
   return flock.connections[ 0 ];
 }
 
 //
 
-function objectGet( alias )
+function connectionToRepresentative( connection )
 {
   let flock = this;
-  if( alias === 'flock' )
-  return flock;
-  throw _.err( `Unknown object::${alias}` );
+  _.assert( flock.connectionIs( connection ) );
+  return flock.connectionToRepresentativeHash.get( connection );
 }
 
 //
 
-function recipientIsMe( recipient )
+function roleDetermine()
 {
   let flock = this;
 
-  _.assert( recipient === null || recipient === 'master' );
-  _.assert( !!flock.role );
+  if( flock.role !== null )
+  return end();
 
-  if( recipient === flock.role )
+  if( flock.masterPath === null || flock.masterPath === undefined )
+  flock.masterPath = flock.MasterPathFindOpened();
+
+  if( flock.masterPath )
+  return end( 'slave' );
+
+  flock._roleDetermine();
+
+  return end();
+
+  function end( role )
+  {
+    if( role !== undefined )
+    flock.role = role;
+    _.assert( _.longHas( [ 'slave', 'master' ], flock.role ), () => `Unknown role ${flock.role}` );
+
+    return flock.role;
+  }
+}
+
+//
+
+function _roleDetermine()
+{
+  let flock = this;
+
+  _.assert( flock.role === null );
+
+  let args = _.process.args();
+
+  if( args.map.role !== undefined )
+  {
+    flock.role = args.map.role;
+  }
+  else
+  {
+    flock.role = 'slave';
+  }
+
+  return flock.role;
+}
+
+//
+
+function format()
+{
+  let flock = this;
+  let logger = flock.logger;
+  return [ `${flock.role} .`, ... arguments ];
+}
+
+//
+
+function log( level, ... msgs )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  logger.begin({ verbosity : level });
+  logger.log( ... flock.format( ... msgs ) );
+  logger.end({ verbosity : level });
+
+}
+
+//
+
+function representativeMake( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  o.flock = flock;
+
+  return _.remote.Representative( o );
+}
+
+// --
+// handle
+// --
+
+function LocalHandleIs( src )
+{
+  if( _.numberIs( src ) )
+  return true;
+  if( _.strIs( src ) )
   return true;
   return false;
 }
 
 //
 
-function serialize( o )
+function localHandleToObjectDescriptor( key )
 {
   let flock = this;
-  let logger = flock.logger;
-  _.assert( _.strDefined( o.channel ) );
-  let serialized = _.toJson( o );
-  return serialized;
-}
-
-serialize.defaults =
-{
-  channel : null,
-  data : null,
+  _.assert( _.strIs( key ) || _.numberIs( key ) );
+  if( _.strIs( key ) )
+  return flock.nameToHandleDescriptorHash.get( key );
+  else
+  return flock.idToHandleDescriptorHash.get( key );
 }
 
 //
 
-function deserialize( o )
+function objectToLocalHandleDescriptor( object )
 {
   let flock = this;
-  let logger = flock.logger;
-  if( _.bufferAnyIs( o.data ) )
-  o.data = _.bufferToStr( o.data );
-  let deserialized = JSON.parse( o.data );
-  return deserialized;
-}
-
-deserialize.defaults =
-{
-  data : null,
+  return flock.objectToHandleDescriptorHash.get( object );
 }
 
 //
+
+function localHandleToObject( key )
+{
+  let flock = this;
+  let desc = flock.localHandleToObjectDescriptor( key );
+  if( !desc )
+  return;
+  return desc.object;
+}
+
+//
+
+// function localHandleToObject( alias )
+// {
+//   let flock = this;
+//   if( alias === 'flock' )
+//   return flock;
+//   throw _.err( `Unknown handle::${alias}` );
+// }
+
+//
+
+function objectToId( object )
+{
+  let flock = this;
+  let desc = flock.objectToLocalHandleDescriptor( object );
+  if( !desc )
+  return;
+  return desc.id;
+}
+
+//
+
+function localHandlesAdd( o )
+{
+  let flock = this;
+
+  _.routineOptions( localHandlesAdd, arguments );
+
+  let result = _.map( o.objects, ( object, k ) =>
+  {
+    if( _.numberIs( k ) )
+    return flock._localHandleAdd({ object });
+    else
+    return flock._localHandleAdd({ object, name : k });
+  });
+
+  return result;
+}
+
+localHandlesAdd.defaults =
+{
+  objects : null,
+}
+
+//
+
+function _localHandleAdd( o )
+{
+  let flock = this;
+  let desc;
+
+  _.assert( o.object !== undefined && o.object !== null );
+  _.routineOptions( _localHandleAdd, arguments );
+  _.assert( o.name === null || _.strDefined( o.name ) );
+
+  desc = flock.objectToHandleDescriptorHash.get( o.object );
+  if( desc )
+  {
+    _.assert( desc.name === o.name, `Object already added with name ${desc.name}. Cant change name to ${o.name}` );
+    return desc;
+  }
+
+  if( o.name )
+  {
+    desc = flock.nameToHandleDescriptorHash.get( o.name );
+    if( desc )
+    {
+      debugger;
+      throw _.err( `Object with name ${o.name} already exists. Cant overwrite it.` );
+    }
+  }
+
+  flock.objectCounter += 1;
+
+  desc = Object.create( null );
+  desc.id = flock.objectCounter;
+  desc.name = o.name;
+  desc.object = o.object;
+
+  flock.idToHandleDescriptorHash.set( desc.id, desc );
+  if( o.name )
+  flock.nameToHandleDescriptorHash.set( desc.name, desc );
+  flock.objectToHandleDescriptorHash.set( desc.object, desc );
+
+  return desc;
+}
+
+_localHandleAdd.defaults =
+{
+  name : null,
+  object : null,
+}
+
+//
+
+function localHandlesRemoveObjects( objects )
+{
+  let flock = this;
+
+  _.routineOptions( localHandlesRemoveObjects, arguments );
+
+  let result = _.map( objects, ( object, k ) =>
+  {
+    return flock.localHandlesRemoveObject( object );
+  });
+
+  return result;
+}
+
+//
+
+function localHandlesRemoveObject( object )
+{
+  let flock = this;
+
+  let desc = flock.objectToHandleDescriptorHash.get( object );
+
+  _.assert( !!desc, () => `Cant remove object. It was not added` );
+
+  return result;
+}
+
+//
+
+function PrimitiveHandleIs( src )
+{
+  if( _.numberIs( src ) )
+  return true;
+  if( _.strIs( src ) )
+  return true;
+  return false;
+}
+
+//
+
+function RemoteHandleIs( src )
+{
+  if( !_.objectIs( src ) )
+  return false;
+  if( !src[ twinSymbol ] )
+  return false;
+  // if( !src.representative )
+  // return false;
+  // if( !src.handle )
+  // return false;
+  return true;
+}
+
+//
+
+function handleFrom( src )
+{
+  let flock = this;
+  let result = src;
+  if( flock.RemoteHandleIs( result ) )
+  result = src[ twinSymbol ].handle;
+  _.assert( flock.PrimitiveHandleIs( result ) );
+  return result;
+}
+
+// --
+// send
+// --
 
 function send( body )
 {
@@ -263,18 +483,16 @@ function _send( o )
 
   _.routineOptions( _send, arguments );
   _.mapOptionsApplyDefaults( o.deserialized, flock.Packet );
-  _.assert( o.deserialized.recipient === null || o.deserialized.recipient === 'master' );
+  _.assert( o.deserialized.recipient === null || _.remote.agentPathIs( o.deserialized.recipient ) );
 
   if( o.deserialized.recipient )
   {
-    debugger;
-    if( flock.recipientIsMe( o.deserialized.recipient ) )
+    if( o.deserialized.recipient === flock.agentPath )
     {
       _.assert( flock.role === 'master' );
       flock.masterRecieveGot({ deserialized : o.deserialized });
       return;
     }
-    else _.assert( 0 );
   }
 
   if( o.connection === null )
@@ -282,7 +500,7 @@ function _send( o )
 
   if( o.serialized === null )
   {
-    o.serialized = flock.serialize( o.deserialized );
+    o.serialized = flock._serialize( o.deserialized );
   }
 
   o.connection.write( o.serialized );
@@ -294,6 +512,60 @@ _send.defaults =
   connection : null,
   deserialized : null,
   serialized : null,
+}
+
+//
+
+function requestCall( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  _.assert( _.remote.agentPathIs( o.recipient ) );
+  _.assert( _.longIs( o.args ) );
+  _.assert( _.strDefined( o.routine ) );
+
+  if( o.context !== null )
+  o.context = flock.handleFrom( o.context );
+  o.object = flock.handleFrom( o.object );
+
+  if( o.context === o.object )
+  o.context = null;
+
+  _.assert( o.context === null || flock.PrimitiveHandleIs( o.context ) );
+  _.assert( flock.PrimitiveHandleIs( o.object ) );
+
+  o.context = flock._pack({ structure : o.context });
+  o.object = flock._pack({ structure : o.object });
+  o.args = flock._pack({ structure : o.args });
+
+  let body =
+  {
+    object : o.object,
+    routine : o.routine,
+    args : o.args,
+    context : o.context,
+  }
+
+  return flock.request
+  ({
+    deserialized :
+    {
+      channel : 'call',
+      recipient : o.recipient,
+      body : body,
+    },
+  });
+
+}
+
+requestCall.defaults =
+{
+  recipient : null,
+  object : null,
+  routine : null,
+  args : null,
+  context : null,
 }
 
 //
@@ -327,11 +599,12 @@ function _requestOpen( o )
   _.assert( o.deserialized.requestId === null );
 
   flock.requestCounter += 1;
-  o.deserialized.requestId = flock.requestCounter;
+  let id = flock.requestCounter;
+  o.deserialized.requestId = id;
 
   let request =
   {
-    id : flock.requestCounter,
+    id,
     deserialized : o.deserialized,
     ready : _.Consequence(),
     status : 1,
@@ -360,16 +633,16 @@ function _requestClose( o )
   _.routineOptions( _requestClose, arguments );
 
   let request = flock.requests[ o.id ];
-  _.assert( !!request );
+  _.assert( !!request, `Unknown request id ${o.id}` );
   _.assert( request.status === 1 );
 
-  if( o.deserialized === _.undefined )
-  o.deserialized = flock._requestDeserialize({ serialized });
+  if( o.unpacked === _.undefined )
+  o.unpacked = flock._unpack({ structure : o.packed });
 
-  request.deserialized = o.deserialized;
-  request.serialized = o.serialized;
+  request.unpacked = o.unpacked;
+  request.packed = o.packed;
   request.status = 2;
-  request.ready.take( o.deserialized );
+  request.ready.take( o.unpacked );
 
   delete flock.requests[ o.id ];
 
@@ -379,8 +652,8 @@ function _requestClose( o )
 _requestClose.defaults =
 {
   id : null,
-  serialized : _.undefined,
-  deserialized : _.undefined,
+  packed : _.undefined,
+  unpacked : _.undefined,
 }
 
 //
@@ -392,35 +665,32 @@ function _requestPerform( o )
 
   _.routineOptions( _requestPerform, arguments );
 
-  debugger;
-
   return _.Consequence.Try( () =>
   {
 
-    debugger;
-    if( o.deserialized === _.undefined )
-    o.deserialized = flock._requestDeserialize({ serialized });
+    if( o.unpacked === _.undefined )
+    o.unpacked = flock._unpack({ structure : o.packed });
 
-    _.assert( o.deserialized.channel === 'call' );
-    _.assert( _.longIs( o.deserialized.body.args ) );
+    _.assert( _.longIs( o.unpacked.args ) );
+    _.assert( o.id >= 1 );
 
-    let object = flock.objectGet( o.deserialized.body.object );
+    let object = flock.localHandleToObject( o.unpacked.object );
 
-    _.assert( _.routineIs( object[ o.deserialized.body.routine ] ) );
+    _.assert( _.routineIs( object[ o.unpacked.routine ] ), `No such routine::${o.unpacked.routine}` );
 
-    let result = object[ o.deserialized.body.routine ]( ... o.deserialized.body.args );
+    let result = object[ o.unpacked.routine ]( ... o.unpacked.args );
     if( result === undefined )
-    return _.undefined;
+    result = _.undefined;
+    return result;
   })
   .then( ( result ) =>
   {
 
-    debugger;
-
     let packet =
     {
       channel : 'response',
-      body : flock._requestSerialize({ deserialized : result }),
+      body : flock._pack({ structure : result }),
+      requestId : o.id,
     }
 
     let o2 =
@@ -431,41 +701,112 @@ function _requestPerform( o )
 
     flock._send( o2 );
 
+    return result;
   });
 }
 
 _requestPerform.defaults =
 {
   id : null,
-  serialized : _.undefined,
-  deserialized : _.undefined,
+  packed : _.undefined,
+  unpacked : _.undefined,
   connection : null,
 }
 
-//
-
-function _requestSerialize( o )
+function _serialize( o )
 {
   let flock = this;
-  return o.deserialized;
+  let logger = flock.logger;
+  let serialized;
+  try
+  {
+    _.assert( _.strDefined( o.channel ), 'Channel is not specified' );
+    serialized = _.toJson( o );
+    serialized = serialized.length + ' ' + serialized;
+  }
+  catch( err )
+  {
+    err = _.err( err, `Agent::{${flock.agentPath}} failed to _serialize structure` );
+  }
+  return serialized;
 }
 
-_requestSerialize.defaults =
+_serialize.defaults =
 {
-  deserialized : null,
+  channel : null,
+  data : null,
 }
 
 //
 
-function _requestDeserialize( o )
+function _deserialize( o )
 {
   let flock = this;
-  return o.serialized;
+  let logger = flock.logger;
+  let converters = _.Gdf.Select({ in : 'string', out : 'structure', ext : 'json', default : 1 })
+  let converter = converters[ 0 ];
+  let result = [];
+
+  if( _.bufferAnyIs( o.data ) )
+  o.data = _.bufferToStr( o.data );
+
+  let left = o.data;
+
+  do
+  {
+    try
+    {
+      let size = parseFloat( left );
+      _.assert( size > 0, () => `Failed to parse prologue of the package "${left.substring( 0, Math.max( left.length, 30 ) )}..."` );
+      let sizeStr = String( size );
+      let current = left.substring( sizeStr.length + 1, sizeStr.length + size + 1 );
+      left = left.substring( sizeStr.length + size + 1, left.length );
+      let deserialized = converter.encode({ data : current });
+      _.assert( _.mapIs( deserialized.data ) );
+      // let deserialized = JSON.parse( o.data );
+      result.push( deserialized.data );
+    }
+    catch( err )
+    {
+      err = _.err( err, `\nagent::{${flock.agentPath}} failed to parse recieved packet\n` );
+      debugger;
+      throw err;
+    }
+  }
+  while( left.length );
+
+  return result;
 }
 
-_requestDeserialize.defaults =
+_deserialize.defaults =
 {
-  serialized : null,
+  data : null,
+}
+
+//
+
+function _pack( o )
+{
+  let flock = this;
+  return o.structure;
+}
+
+_pack.defaults =
+{
+  structure : null,
+}
+
+//
+
+function _unpack( o )
+{
+  let flock = this;
+  return o.structure;
+}
+
+_unpack.defaults =
+{
+  structure : null,
 }
 
 // --
@@ -480,11 +821,22 @@ function commonRecieveGot( o )
   _.routineOptions( commonRecieveGot, arguments );
 
   if( o.deserialized === null )
-  o.deserialized = flock.deserialize({ data : o.serialized });
+  o.deserialized = flock._deserialize({ data : o.serialized });
+
+  if( _.longIs( o.deserialized ) )
+  {
+    for( let d = 0 ; d < o.deserialized.length ; d++ )
+    flock.commonRecieveGot
+    ({
+      deserialized : o.deserialized[ d ],
+      connection : o.connection,
+    });
+    return;
+  }
 
   if( o.deserialized.recipient )
   {
-    if( !flock.recipientIsMe( o.deserialized.recipient ) )
+    if( o.deserialized.recipient !== flock.agentPath )
     {
       flock._send
       ({
@@ -495,25 +847,15 @@ function commonRecieveGot( o )
     }
   }
 
-  if( o.deserialized.requestId )
+  if( o.deserialized.channel !== null )
   {
-    if( o.deserialized.channel === 'call' )
-    flock._requestPerform
-    ({
-      id : -o.deserialized.requestId,
-      serialized : o.deserialized.body,
-      connection : o.connection,
-    });
-    else if( o.deserialized.channel === 'response' )
-    flock._requestClose
-    ({
-      id : -o.deserialized.requestId,
-      serialized : o.deserialized.body,
-    });
-    else _.assert( `Unknown channel ${o.deserialized.channel}` );
+    _.assert( _.strDefined( o.deserialized.channel ) );
+    let methodName = `_channel${_.strCapitalize( o.deserialized.channel )}`;
+    _.sure( _.routineIs( flock[ methodName ] ), `Unknown channel ${o.deserialized.channel}` );
+    flock[ methodName ]( o );
   }
 
-  flock.log( -5, `recieved . ${o.deserialized.body}` );
+  flock.log( -5, `recieved . ${o.deserialized.channel} . ${o.deserialized.body}` );
 }
 
 commonRecieveGot.defaults =
@@ -523,9 +865,146 @@ commonRecieveGot.defaults =
   connection : null,
 }
 
+//
+
+function commonErrorGot( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  logger.error( _.errOnce( `Error of ${flock.agentPath || flock.role}\n`, o.err ) );
+
+  flock.masterCloseSoonMaybe();
+
+  flock.eventGive
+  ({
+    kind : 'errorGot',
+    representative : !o.connection ? null : flock.connectionToRepresentative( o.connection ),
+    err : o.err,
+  });
+
+}
+
+commonErrorGot.defaults =
+{
+  err : null,
+  connection : null,
+}
+
+//
+
+function _channelMessage( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  flock.eventGive
+  ({
+    kind : 'channelMessage',
+    representative : !o.connection ? null : flock.connectionToRepresentative( o.connection ),
+    message : o.deserialized.body,
+  });
+
+}
+
+//
+
+function _channelCall( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  return flock._requestPerform
+  ({
+    id : o.deserialized.requestId,
+    packed : o.deserialized.body,
+    connection : o.connection,
+  });
+}
+
+//
+
+function _channelResponse( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  return flock._requestClose
+  ({
+    id : o.deserialized.requestId,
+    packed : o.deserialized.body,
+  });
+}
+
+//
+
+function _channelIdentity( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  flock.slaveConnectEnd
+  ({
+    connection : o.connection,
+    attempt : flock._connectAttemptsMade,
+    id : o.deserialized.body.id,
+  });
+
+}
+
 // --
 // slave
 // --
+
+function slaveOpenSlave( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  _.routineOptions( slaveOpenSlave, o );
+
+  debugger;
+
+  if( flock.role === 'master' )
+  {
+
+    return flock.masterSlaveOpen()
+    .then( ( slaveFlock ) =>
+    {
+      debugger;
+      return slaveFlock.object;
+    });
+
+  }
+  else
+  {
+
+    let body =
+    {
+      object : 'flock',
+      routine : 'slaveOpenSlave',
+      args : [],
+    }
+
+    return flock.request
+    ({
+      deserialized :
+      {
+        channel : 'call',
+        recipient : '/master1',
+        body : body,
+      },
+    });
+
+  }
+
+}
+
+slaveOpenSlave.defaults =
+{
+}
+
+//
 
 function slaveOpenMaster()
 {
@@ -548,10 +1027,8 @@ function slaveOpenMaster()
     stdio : 'pipe',
   });
 
-  debugger;
   result.then( ( process ) =>
   {
-    debugger;
     _.assert( flock._process === result );
     flock._process = process;
     return process;
@@ -570,7 +1047,7 @@ function slaveConnectMaster()
   let masterPathParsed = _.uri.parse( flock.masterPath );
   masterPathParsed.port = _.strToNumberMaybe( masterPathParsed.port );
 
-  flock._connectAttemptsMade += 1; debugger;
+  flock._connectAttemptsMade += 1;
 
   let attempt = flock._connectAttemptsMade;
 
@@ -583,7 +1060,7 @@ function slaveConnectMaster()
   flock.slaveConnectBegin({ attempt });
 
   let o2 = { port : masterPathParsed.port };
-  let connection = Net.createConnection( o2, () => flock.slaveConnectEnd({ attempt }) );
+  let connection = Net.createConnection( o2, () => flock.slaveConnectEndWaitingForIdentity({ attempt, connection }) );
 
   flock.connections.push( connection );
 
@@ -591,12 +1068,27 @@ function slaveConnectMaster()
   connection.on( 'error', ( err ) => flock.slaveErrorGot({ err }) );
   connection.on( 'end', () => flock.slaveDisconnectEnd({ connection, attempt }) )
 
-  _.time.out( 10000, () =>
-  {
-    flock.slaveDisconnectMaster();
-  });
+  let ready = _.Consequence();
 
-  return flock;
+  flock.once( 'connectEnd', connectEnd );
+  flock.once( 'errorGot', errorGot );
+
+  return ready;
+
+  function connectEnd( e )
+  {
+    flock.off( 'connectEnd', connectEnd );
+    flock.off( 'errorGot', errorGot );
+    ready.take( flock.master );
+  }
+
+  function errorGot( e )
+  {
+    flock.off( 'connectEnd', connectEnd );
+    flock.off( 'errorGot', errorGot );
+    ready.error( e.error );
+  }
+
 }
 
 //
@@ -606,7 +1098,7 @@ function slaveConnectMasterMaybe()
   let flock = this;
   let logger = flock.logger;
 
-  if( _.longHas( [ 'closed', 'connecting' ], flock._connectStatus ) )
+  if( _.longHas( [ 'closed', 'connecting', 'connection.waiting.for.identity' ], flock._connectStatus ) )
   if( flock.connectAttempts > flock._connectAttemptsMade )
   {
     flock.slaveConnectMaster();
@@ -659,6 +1151,12 @@ function slaveConnectBegin( o )
   _.assert( flock._connectStatus === 'closed' );
   flock._connectStatus = 'connecting';
 
+  flock.eventGive
+  ({
+    kind : 'connectBegin',
+    attempt : o.attempt,
+  });
+
   flock.log( -7, `slaveConnectBegin. Attempt ${flock._connectAttemptsMade} / ${flock.connectAttempts}` );
 }
 
@@ -669,37 +1167,73 @@ slaveConnectBegin.defaults =
 
 //
 
+function slaveConnectEndWaitingForIdentity( o )
+{
+  let flock = this;
+  let logger = flock.logger;
+
+  _.assert( !!o.connection );
+  _.assert( flock._connectStatus === 'connecting' );
+  flock._connectStatus = 'connection.waiting.for.identity';
+
+  flock.master = flock.representativeMake
+  ({
+    agentPath : _.remote.agentPathFromRole( 'master' ),
+    connection : o.connection,
+  })
+
+  flock.eventGive
+  ({
+    kind : 'connectEndWaitingForIdentity',
+    attempt : o.attempt,
+    representative : flock.master,
+  });
+
+  flock.log( -7, `slaveConnectEndWaitingForIdentity` );
+}
+
+slaveConnectEndWaitingForIdentity.defaults =
+{
+  connection : null,
+  attempt : null,
+}
+
+//
+
 function slaveConnectEnd( o )
 {
   let flock = this;
   let logger = flock.logger;
 
-  _.assert( flock._connectStatus === 'connecting' );
+  _.assert( !!o.connection );
+  _.assert( flock._connectStatus === 'connection.waiting.for.identity' );
   flock._connectStatus = 'connected';
 
-  flock.log( -7, `slaveConnectEnd` );
+  /* qqq : write explanation for every assert. ask how to */
+
+  _.assert( flock.role === 'slave' );
+  _.assert( flock.id === 0 );
+  _.assert( o.id >= 2 );
+  _.assert( _.numberIs( o.id ) );
+  flock.id = o.id;
+  _.assert( flock.agentPath === null );
+  flock.agentPath = _.remote.agentPathFromRole( flock.role, flock.id );
 
   flock.eventGive
   ({
     kind : 'connectEnd',
-    connection : flock.connectionDefaultGet(),
     attempt : o.attempt,
+    representative : flock.master,
   });
 
-  // flock._send /* xxx : temp */
-  // ({
-  //   connection : flock.connections[ 0 ],
-  //   deserialized :
-  //   {
-  //     body : 'SLAVE-SENDING: Hello this is client!',
-  //   }
-  // });
-
+  flock.log( -7, `slaveConnectEnd` );
 }
 
 slaveConnectEnd.defaults =
 {
+  connection : null,
   attempt : null,
+  id : null,
 }
 
 //
@@ -729,7 +1263,9 @@ function slaveRecieveGot( o )
   let flock = this;
   let logger = flock.logger;
   _.routineOptions( slaveRecieveGot, arguments );
-  return flock.commonRecieveGot( ... arguments );
+  if( o.connection === null )
+  o.connection = flock.connectionDefaultGet();
+  return flock.commonRecieveGot( o );
 }
 
 slaveRecieveGot.defaults =
@@ -757,16 +1293,26 @@ function slaveErrorGot( o )
   }
   catch( err )
   {
-    logger.error( _.err( 'slaveErrorGot error\n', err ) );
+    logger.error( _.errOnce( 'slaveErrorGot error\n', err ) );
   }
 
-  logger.error( _.err( 'Slave error\n', o.err ) );
+  if( !o.connection )
+  try
+  {
+    if( flock.connections.length )
+    o.connection = flock.connectionDefaultGet();
+  }
+  catch( err )
+  {
+    logger.error( _.errOnce( 'slaveErrorGot error\n', err ) );
+  }
 
+  return flock.commonErrorGot( o );
 }
 
 slaveErrorGot.defaults =
 {
-  err : null,
+  ... commonErrorGot.defaults,
 }
 
 // --
@@ -792,6 +1338,13 @@ function masterOpen()
   let flock = this;
   let logger = flock.logger;
 
+  _.assert( flock.agentCounter === 0 );
+  flock.agentCounter += 1;
+  _.assert( flock.id === 0 );
+  flock.id = flock.agentCounter;
+  _.assert( flock.agentPath === null );
+  flock.agentPath = _.remote.agentPathFromRole( flock.role, flock.id );
+
   flock.masterOpenBegin();
 
   if( !flock.masterPath )
@@ -804,7 +1357,7 @@ function masterOpen()
 
   flock.server = Net.createServer( ( connection ) =>
   {
-    flock.masterConnectBegin({ connection });
+    flock.masterConnectBegin({});
     connection
     .on( 'data', ( data ) => flock.masterRecieveGot({ connection, serialized : data }) )
     .on( 'end', () => flock.masterDisconnectEnd({ connection }) )
@@ -856,9 +1409,7 @@ function masterCloseSoonMaybe()
   if( !flock.masterCloseCan() )
   return false;
 
-  debugger;
   flock.terminationTimer = _.time.begin( flock.terminationPeriod, () => flock._masterCloseMaybe() );
-  debugger;
 
   return true;
 }
@@ -872,7 +1423,6 @@ function masterCloseSoonCancel()
 
   if( flock.terminationTimer )
   {
-    debugger;
     flock.terminationTimer = _.time.cancel( flock.terminationTimer );
     flock.terminationTimer = null;
   }
@@ -932,7 +1482,7 @@ function masterOpenBegin()
   _.assert( flock._connectStatus === 'closed' );
   flock._connectStatus = 'opening';
 
-  _.time.out( flock.openingPeriod, () => flock.masterCloseSoonMaybe() );
+  _.time.out( flock.terminationOnOpeningExtraPeriod, () => flock.masterCloseSoonMaybe() );
 
 }
 
@@ -956,17 +1506,19 @@ function masterConnectBegin( o )
   let flock = this;
   let logger = flock.logger;
 
-  _.arrayAppendOnceStrictly( flock.connections, o.connection );
+  _.assert( !o.connection );
 
   flock.masterCloseSoonCancel();
 
-  flock.log( -7, `${o.connection.remoteAddress} connected. ${flock.connections.length} connections` );
+  flock.eventGive
+  ({
+    kind : 'connectBegin',
+  });
 
 }
 
 masterConnectBegin.defaults =
 {
-  connection : null,
 }
 
 //
@@ -976,22 +1528,43 @@ function masterConnectEnd( o )
   let flock = this;
   let logger = flock.logger;
 
-  flock.log( -7, `masterConnectEnd` );
+  _.assert( !!o.connection );
+
+  _.arrayAppendOnceStrictly( flock.connections, o.connection );
+
+  flock.agentCounter += 1;
+  let id = flock.agentCounter;
+  let agentPath = _.remote.agentPathFromRole( 'slave', id );
+
+  _.assert( id >= 2 );
+
+  let representative = flock.representativeMake
+  ({
+    agentPath,
+    connection : o.connection,
+  });
+
+  _.assert( flock.representativesMap[ id ] === representative );
+  _.assert( id === representative.id );
+  _.assert( o.connection === representative.connection );
+
+  flock._send
+  ({
+    connection : o.connection,
+    deserialized :
+    {
+      channel : 'identity',
+      body : { id }
+    }
+  });
 
   flock.eventGive
   ({
     kind : 'connectEnd',
-    connection : o.connection,
+    representative,
   });
 
-  // flock._send /* xxx : temp */
-  // ({
-  //   connection : o.connection,
-  //   deserialized :
-  //   {
-  //     body : 'MASTER-SENDING: Hello! This is server speaking.',
-  //   },
-  // });
+  flock.log( -7, `${o.connection.remoteAddress} connected. ${flock.connections.length} connection(s)` );
 
 }
 
@@ -1010,7 +1583,7 @@ function masterDisconnectEnd( o )
 
   flock.masterCloseSoonMaybe();
 
-  flock.log( -7, `${o.connection.remoteAddress} disconnected. ${flock.connections.length} connections` );
+  flock.log( -7, `${o.connection.remoteAddress} disconnected. ${flock.connections.length} connection(s)` );
 }
 
 masterDisconnectEnd.defaults =
@@ -1041,109 +1614,19 @@ function masterErrorGot( o )
 {
   let flock = this;
   let logger = flock.logger;
-  logger.error( _.err( 'Master error\n', o.err ) );
-  debugger;
+  return flock.commonErrorGot( o );
 }
 
 masterErrorGot.defaults =
 {
-  err : null,
-  connection : null,
-}
-
-// --
-// center
-// --
-
-function CenterProxyGet( original, fieldName, proxy )
-{
-  debugger;
-}
-
-//
-
-function CenterProxySet( original, fieldName, value, proxy )
-{
-  debugger;
-}
-
-// --
-// etc
-// --
-
-function roleDetermine()
-{
-  let flock = this;
-
-  if( flock.role !== null )
-  return end();
-
-  if( flock.masterPath === null || flock.masterPath === undefined )
-  flock.masterPath = flock.MasterPathFindOpened();
-
-  if( flock.masterPath )
-  return end( 'slave' );
-
-  flock._roleDetermine();
-
-  return end();
-
-  function end( role )
-  {
-    if( role !== undefined )
-    flock.role = role;
-    _.assert( _.longHas( [ 'slave', 'master' ], flock.role ), () => `Unknown role ${flock.role}` );
-    return flock.role;
-  }
-}
-
-//
-
-function _roleDetermine()
-{
-  let flock = this;
-
-  _.assert( flock.role === null );
-
-  let args = _.process.args();
-
-  if( args.map.role !== undefined )
-  {
-    flock.role = args.map.role;
-  }
-  else
-  {
-    flock.role = 'slave';
-  }
-
-  return flock.role;
-}
-
-//
-
-function format()
-{
-  let flock = this;
-  let logger = flock.logger;
-  return [ `${flock.role} .`, ... arguments ];
-}
-
-//
-
-function log( level, ... msgs )
-{
-  let flock = this;
-  let logger = flock.logger;
-
-  logger.begin({ verbosity : level });
-  logger.log( ... flock.format( ... msgs ) );
-  logger.end({ verbosity : level });
-
+  ... commonErrorGot.defaults,
 }
 
 // --
 // relationships
 // --
+
+let twinSymbol = Symbol.for( 'twin' );
 
 let Packet =
 {
@@ -1157,73 +1640,85 @@ let Composes =
 {
 
   terminationPeriod : 5000,
-  openingPeriod : 5000,
-
-  entryPath : null,
-  masterPath : null,
+  terminationOnOpeningExtraPeriod : 5000,
+  slaveDelay : 1000,
+  masterDelay : 0,
 
   connectAttempts : 2,
   connectAttemptDelay : 250,
+
+  entryPath : null,
+  masterPath : null,
+  agentPath : null,
 
 }
 
 let Associates =
 {
+
   logger : null,
-  server : null,
-  connections : _.define.own( [] ),
-  object : null,
-  _process : null,
+
 }
 
 let Restricts =
 {
 
+  server : null,
+  connections : _.define.own( [] ),
+  _process : null,
+
+  master : null,
+  representativesMap : _.define.own( {} ),
+  connectionToRepresentativeHash : _.define.own( new HashMap ),
+
   terminationTimer : null,
 
+  agentCounter : 0,
   role : null,
+  id : 0,
   _connectAttemptsMade : 0,
   _connectStatus : 'closed',
 
   requestCounter : 0,
   requests : _.define.own( {} ),
 
+  objectCounter : 0,
+  idToHandleDescriptorHash : _.define.own( new HashMap ),
+  nameToHandleDescriptorHash : _.define.own( new HashMap ),
+  objectToHandleDescriptorHash : _.define.own( new HashMap ),
+
 }
 
 let Events =
 {
-  connectEnd : {},
-}
 
-  // masterOpen,
-  // masterClose,
-  // masterIsOpened,
-  // masterCloseSoonMaybe,
-  // masterCloseSoonCancel,
-  // _masterCloseMaybe,
-  // masterCloseCan,
-  //
-  // masterCloseBegin,
-  // masterCloseEnd,
-  // masterOpenBegin,
-  // masterOpenEnd,
-  // masterConnectBegin,
-  // masterConnectEnd,
-  // masterDisconnectEnd,
-  // masterRecieveGot,
-  // masterErrorGot,
+  errorGot : {},
+
+  connectBegin : {},
+  connectEndWaitingForIdentity : {},
+  connectEnd : {},
+
+  channelMessage : {},
+
+}
 
 let Statics =
 {
 
+  LocalHandleIs,
+  PrimitiveHandleIs,
+  RemoteHandleIs,
+
   MasterPathFindOpened,
   MasterPathFindFree,
 
-  CenterProxyGet,
-  CenterProxySet,
-
   Packet,
 
+}
+
+let Forbids =
+{
+  object : 'object',
 }
 
 let Accessor =
@@ -1239,38 +1734,74 @@ let Proto =
 
   // inter
 
+  finit,
+  init,
   unform,
   form,
-
-  // worker
-
-  workerOpen,
 
   // etc
 
   close,
+  connectionIs,
   connectionIsAlive,
   connectionDefaultGet,
-  objectGet,
+  connectionToRepresentative,
 
-  serialize,
-  deserialize,
+  roleDetermine,
+  _roleDetermine,
+  format,
+  log,
+
+  representativeMake,
+
+  // handles
+
+  LocalHandleIs,
+
+  localHandleToObjectDescriptor,
+  objectToLocalHandleDescriptor,
+  localHandleToObject,
+  objectToId,
+
+  localHandlesAdd,
+  _localHandleAdd,
+
+  localHandlesRemoveObjects,
+  localHandlesRemoveObject,
+
+  PrimitiveHandleIs,
+  RemoteHandleIs,
+  handleFrom,
+
+  // send
 
   send,
   _send,
+
+  requestCall,
   request,
   _requestOpen,
   _requestClose,
   _requestPerform,
-  _requestSerialize,
-  _requestDeserialize,
+
+  _serialize,
+  _deserialize,
+  _pack,
+  _unpack,
 
   // common
 
   commonRecieveGot,
+  commonErrorGot,
+
+  _channelMessage,
+  _channelCall,
+  _channelResponse,
+  _channelIdentity,
 
   // slave
 
+  slaveOpenSlave,
   slaveOpenMaster,
   slaveConnectMaster,
   slaveConnectMasterMaybe,
@@ -1278,6 +1809,7 @@ let Proto =
   slaveIsConnected,
 
   slaveConnectBegin,
+  slaveConnectEndWaitingForIdentity,
   slaveConnectEnd,
   slaveDisconnectEnd,
   slaveRecieveGot,
@@ -1306,25 +1838,14 @@ let Proto =
   masterRecieveGot,
   masterErrorGot,
 
-  // center
-
-  CenterProxyGet,
-  CenterProxySet,
-
-  // etc
-
-  roleDetermine,
-  _roleDetermine,
-  format,
-  log,
-
-  /* */
+  // relations
 
   Composes,
   Associates,
   Restricts,
   Events,
   Statics,
+  Forbids,
   Accessor,
 
 }

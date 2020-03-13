@@ -19,26 +19,7 @@ var _ = _global_.wTools;
 let Parent = null;
 let Self = function wStarterCenter( o )
 {
-  // debugger;
-  // if( !( context instanceof cls ) )
-  // if( o instanceof cls )
-  // {
-  //   _.assert( args.length === 1 );
-  //
-  //   let handlers =
-  //   {
-  //     get : _.Remote.CenterProxyGet,
-  //     set : _.Remote.CenterProxySet,
-  //   };
-  //
-  //   let proxy = new Proxy( o, handlers );
-  //
-  //   return proxy;
-  // }
-  // else
-  // {
-    return _.workpiece.construct( Self, this, arguments );
-  // }
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Center';
@@ -50,13 +31,7 @@ Self.shortName = 'Center';
 function unform()
 {
   let center = this;
-
-  _.assert( 0, 'not implemented' );
-
-/*
-qqq : implement please
-*/
-
+  flock.close();
 }
 
 //
@@ -64,36 +39,60 @@ qqq : implement please
 function form()
 {
   let center = this;
-
   let flock = center.flock = _.remote.Flock
   ({
     entryPath : __filename,
   });
 
+  flock.localHandlesAdd({ objects : { center : center } });
+
   flock.on( 'connectEnd', () =>
   {
 
-    flock.send( `from ${flock.agentPath}` );
+    flock.send( `from ${flock.role}` );
 
     if( flock.role === 'slave' )
     _.time.out( _DisconnectDelay_, () =>
     {
       flock.slaveDisconnectMaster();
+      _.procedure.terminationReport();
     });
 
   });
 
-  return flock.form();
+  return flock.form()
+  .then( ( arg ) =>
+  {
+    if( flock.role !== 'slave' )
+    return null;
+    let masterCenter = flock.master.handleToTwin( 'center' );
+    return masterCenter.doSomething();
+  })
+  .then( ( got ) =>
+  {
+    if( flock.role !== 'slave' )
+    return null;
+    flock.log( 0, `doSomething ${got}` );
+    return got;
+  })
+  ;
+
   // .then( ( arg ) =>
   // {
   //   debugger;
-  //   return center.remote.workerOpen();
+  //   return center.remote.slaveOpenSlave();
   // })
-  // .then( ( slave ) =>
+  // .then( ( slaveFlock ) =>
   // {
   //   debugger;
-  //   center._slave = slave;
-  //   return center._slave.execImmediate();
+  //   center.slaveFlock = slaveFlock;
+  //   center.slaveCenter = slaveFlock.objectGet( 'center' );
+  //   return center.slaveCenter.doSomething();
+  // });
+  // .then( ( got ) =>
+  // {
+  //   debugger;
+  //   center.flock.log( 0, `doSomething ${got}` );
   // });
 
 }
@@ -115,16 +114,31 @@ function exec()
 }
 
 // --
+//
+// --
+
+function doSomething()
+{
+  let center = this;
+  let result = center.field1 + center.field2;
+  center.flock.log( 0, `doSomething ${result}` );
+  return result;
+}
+
+// --
 // relationships
 // --
 
 let Composes =
 {
+  field1 : 1,
+  field2 : 2,
 }
 
 let Associates =
 {
   flock : null,
+  slave : null,
 }
 
 let Restricts =
@@ -147,13 +161,18 @@ let Accessor =
 let Proto =
 {
 
+  // inter
+
   unform,
   form,
-
   Exec,
   exec,
 
-  /* */
+  //
+
+  doSomething,
+
+  //
 
   Composes,
   Associates,

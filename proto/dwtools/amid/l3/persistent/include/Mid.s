@@ -9,8 +9,8 @@ if( typeof module !== 'undefined' )
 
   require( '../l1/Namespace.s' );
 
-  require( '../l3/Representative.s' );
-  require( '../l3/Flock.s' );
+  require( '../l3/Collection.s' );
+  require( '../l3/Repo.s' );
 
 }
 

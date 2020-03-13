@@ -2,7 +2,7 @@
 
 'use strict';
 
-/* remote */
+/* persistent */
 
 if( typeof module !== 'undefined' )
 {
@@ -10,11 +10,8 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../../../Tools.s' );
 
   _.include( 'wCopyable' );
-  _.include( 'wEventHandler' );
   _.include( 'wFiles' );
   _.include( 'wConsequence' );
-  _.include( 'wAppBasic' );
-  _.include( 'wGdfStrategy' );
 
 }
 
