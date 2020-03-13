@@ -165,12 +165,21 @@ module:
           - ../proto/dwtools/amid/l3/remote/l1/Namespace.s
           - ../proto/dwtools/amid/l3/remote/l3
           - ../proto/dwtools/amid/l3/remote/l3/Flock.s
+          - ../proto/dwtools/amid/l3/remote/l3/Representative.s
           - ../proto/dwtools/amid/l3.test
           - ../proto/dwtools/amid/l3.test/remote
           - ../proto/dwtools/amid/l3.test/remote/Ext.test.s
           - ../proto/dwtools/amid/l3.test/remote/_assets
           - ../proto/dwtools/amid/l3.test/remote/_assets/basic
           - ../proto/dwtools/amid/l3.test/remote/_assets/basic/Center.s
+          - ../proto/dwtools/amid/l3.test/remote/_assets/manyMessages
+          - ../proto/dwtools/amid/l3.test/remote/_assets/manyMessages/Center.s
+          - ../proto/dwtools/amid/l3.test/remote/_assets/masterCallSlave
+          - >-
+            ../proto/dwtools/amid/l3.test/remote/_assets/masterCallSlave/Center.s
+          - ../proto/dwtools/amid/l3.test/remote/_assets/slaveCallMaster
+          - >-
+            ../proto/dwtools/amid/l3.test/remote/_assets/slaveCallMaster/Center.s
           - ../proto/dwtools/atop
     submodule:
       wTools:
@@ -1542,6 +1551,4 @@ module:
       ../.im.will.yml:
         hash: a5c2a76df498aceda49331a70c4bd2c1
         size: 5156
-      wRemote.out.will.yml:
-        hash: a9ec0aa914aa771f6ee488c54d1c529d
-        size: 39340
+      wRemote.out.will.yml: *ref_0
