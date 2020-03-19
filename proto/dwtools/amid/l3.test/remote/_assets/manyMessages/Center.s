@@ -56,7 +56,7 @@ function form()
     if( flock.role === 'slave' )
     _.time.out( _DisconnectDelay_, () =>
     {
-      flock.slaveDisconnectMaster();
+      flock.close();
     });
 
   });

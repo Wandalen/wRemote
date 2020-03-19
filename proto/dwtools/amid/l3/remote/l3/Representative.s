@@ -2,11 +2,6 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-  var Net = require( 'net' );
-}
-
 //
 
 let _ = _global_.wTools;
@@ -156,7 +151,7 @@ function TwinProxyGet( op, fieldName, proxy )
     [ fieldName ] : function()
     {
       _.assert( this === proxy );
-      return flock.requestCall
+      return flock.agent.requestCall
       ({
         recipient : representative.agentPath,
         object : handle,
@@ -207,7 +202,6 @@ let Statics =
 
 let Forbids =
 {
-  // role : 'role',
 }
 
 let Accessor =

@@ -73,29 +73,17 @@ function form()
   flock.on( 'connectEnd', () =>
   {
 
-    flock.send( `from ${flock.agentPath}` );
+    flock.send( `from ${flock.agent.agentPath}` );
 
     if( flock.role === 'slave' )
     _.time.out( _DisconnectDelay_, () =>
     {
-      flock.slaveDisconnectMaster();
+      flock.close();
     });
 
   });
 
   return flock.form();
-  // .then( ( arg ) =>
-  // {
-  //   debugger;
-  //   return center.remote.workerOpen();
-  // })
-  // .then( ( slave ) =>
-  // {
-  //   debugger;
-  //   center._slave = slave;
-  //   return center._slave.execImmediate();
-  // });
-
 }
 
 //

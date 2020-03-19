@@ -105,12 +105,12 @@ function basic( test )
 
     test.identical( _.strCount( got.output, 'slave . slaveConnectBegin. Attempt 1 / 2' ), 1 );
     test.identical( _.strCount( got.output, 'slave . recieved . identity .' ), 1 );
-    test.identical( _.strCount( got.output, 'master . start' ), 1 );
+    test.identical( _.strCount( got.output, 'master . enter' ), 1 );
     test.identical( _.strCount( got.output, 'slave . slaveConnectEndWaitingForIdentity' ), 1 );
     test.identical( _.strCount( got.output, 'slave . slaveConnectEnd' ), 2 );
     test.identical( _.strCount( got.output, 'slave . slaveDisconnectEnd' ), 1 );
 
-    test.identical( _.strCount( got.output, 'slave . start' ), 1 );
+    test.identical( _.strCount( got.output, 'slave . enter' ), 1 );
     test.identical( _.strCount( got.output, 'slave . exit' ), 1 );
 
     test.identical( _.strCount( got.output, '1 connection(s)' ), 1 );
@@ -170,7 +170,7 @@ function manyMessages( test )
     test.identical( _.strCount( got.output, 'slave . recieved . message .' ), 3 );
     test.identical( _.strCount( got.output, 'master . recieved . message .' ), 3 );
 
-    test.identical( _.strCount( got.output, 'slave . start' ), 1 );
+    test.identical( _.strCount( got.output, 'slave . enter' ), 1 );
     test.identical( _.strCount( got.output, 'slave . exit' ), 1 );
 
     test.identical( _.strCount( got.output, '1 connection(s)' ), 1 );
@@ -229,7 +229,7 @@ function slaveCallMaster( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'slave . start' ), 1 );
+    test.identical( _.strCount( got.output, 'slave . enter' ), 1 );
     test.identical( _.strCount( got.output, 'slave . exit' ), 1 );
 
     test.identical( _.strCount( got.output, 'slave . recieved . message . from master' ), 1 );
@@ -286,7 +286,7 @@ function masterCallSlave( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'slave . start' ), 1 );
+    test.identical( _.strCount( got.output, 'slave . enter' ), 1 );
     test.identical( _.strCount( got.output, 'slave . exit' ), 1 );
 
     test.identical( _.strCount( got.output, 'slave . recieved . message . from master' ), 1 );
