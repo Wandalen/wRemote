@@ -174,7 +174,7 @@ function TwinProxySet( op, fieldName, value, proxy )
 }
 
 // --
-// relationships
+// relations
 // --
 
 let twinSymbol = Symbol.for( 'twin' );

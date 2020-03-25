@@ -81,7 +81,7 @@ function exec()
 }
 
 // --
-// relationships
+// relations
 // --
 
 let Composes =

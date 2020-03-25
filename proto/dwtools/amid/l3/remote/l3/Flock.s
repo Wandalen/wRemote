@@ -472,7 +472,7 @@ function exitGot()
 }
 
 // --
-// relationships
+// relations
 // --
 
 let twinSymbol = Symbol.for( 'twin' );

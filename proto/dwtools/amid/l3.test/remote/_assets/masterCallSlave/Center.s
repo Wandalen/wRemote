@@ -114,7 +114,7 @@ function doSomething()
 }
 
 // --
-// relationships
+// relations
 // --
 
 let Composes =
