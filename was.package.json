@@ -1,6 +1,6 @@
 {
   "name" : "wremote", 
-  "version" : "0.3.9", 
+  "version" : "0.3.10", 
   "description" : "Abstract interface of connection between several procedures", 
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
   "license" : "MIT", 
