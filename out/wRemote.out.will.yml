@@ -155,6 +155,31 @@ module:
           - ../proto/dwtools/Tools.s
           - ../proto/dwtools/abase
           - ../proto/dwtools/amid
+          - ../proto/dwtools/amid/-l3
+          - ../proto/dwtools/amid/-l3/remote
+          - ../proto/dwtools/amid/-l3/remote/Include.s
+          - ../proto/dwtools/amid/-l3/remote/include
+          - ../proto/dwtools/amid/-l3/remote/include/Base.s
+          - ../proto/dwtools/amid/-l3/remote/include/Mid.s
+          - ../proto/dwtools/amid/-l3/remote/l1
+          - ../proto/dwtools/amid/-l3/remote/l1/Namespace.s
+          - ../proto/dwtools/amid/-l3/remote/l3
+          - ../proto/dwtools/amid/-l3/remote/l3/Flock.s
+          - ../proto/dwtools/amid/-l3/remote/l3/Representative.s
+          - ../proto/dwtools/amid/-l3.test
+          - ../proto/dwtools/amid/-l3.test/remote
+          - ../proto/dwtools/amid/-l3.test/remote/Ext.test.s
+          - ../proto/dwtools/amid/-l3.test/remote/_assets
+          - ../proto/dwtools/amid/-l3.test/remote/_assets/basic
+          - ../proto/dwtools/amid/-l3.test/remote/_assets/basic/Center.s
+          - ../proto/dwtools/amid/-l3.test/remote/_assets/manyMessages
+          - ../proto/dwtools/amid/-l3.test/remote/_assets/manyMessages/Center.s
+          - ../proto/dwtools/amid/-l3.test/remote/_assets/masterCallSlave
+          - >-
+            ../proto/dwtools/amid/-l3.test/remote/_assets/masterCallSlave/Center.s
+          - ../proto/dwtools/amid/-l3.test/remote/_assets/slaveCallMaster
+          - >-
+            ../proto/dwtools/amid/-l3.test/remote/_assets/slaveCallMaster/Center.s
           - ../proto/dwtools/amid/l3
           - ../proto/dwtools/amid/l3/remote
           - ../proto/dwtools/amid/l3/remote/Include.s
@@ -164,8 +189,12 @@ module:
           - ../proto/dwtools/amid/l3/remote/l1
           - ../proto/dwtools/amid/l3/remote/l1/Namespace.s
           - ../proto/dwtools/amid/l3/remote/l3
+          - ../proto/dwtools/amid/l3/remote/l3/Agent.s
           - ../proto/dwtools/amid/l3/remote/l3/Flock.s
           - ../proto/dwtools/amid/l3/remote/l3/Representative.s
+          - ../proto/dwtools/amid/l3/remote/l5
+          - ../proto/dwtools/amid/l3/remote/l5/Master.s
+          - ../proto/dwtools/amid/l3/remote/l5/Slave.s
           - ../proto/dwtools/amid/l3.test
           - ../proto/dwtools/amid/l3.test/remote
           - ../proto/dwtools/amid/l3.test/remote/Ext.test.s
