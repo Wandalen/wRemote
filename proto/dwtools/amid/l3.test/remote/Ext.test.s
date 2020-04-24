@@ -12,7 +12,7 @@ if( typeof module !== 'undefined' )
 let _ = _global_.wTools;
 let fileProvider = _testerGlobal_.wTools.fileProvider;
 let path = fileProvider.path;
-let debugged = _.processIsDebugged();
+let debugged = _.process.isDebugged();
 
 // --
 // context
@@ -59,7 +59,7 @@ function assetFor( test )
   a.env = _.mapExtend( null, process.env, envExtension );
   a.js = a.process.starter
   ({
-    execPath : context.execJsPath || null,
+    execPath : context.appJsPath || null,
     currentPath : a.routinePath,
     outputCollecting : 1,
     throwingExitCode : 1,
@@ -335,7 +335,7 @@ var Self =
   {
     suiteTempPath : null,
     assetsOriginalSuitePath : null,
-    execJsPath : null,
+    appJsPath : null,
     assetFor,
   },
 
