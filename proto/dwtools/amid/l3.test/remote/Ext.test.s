@@ -57,7 +57,7 @@ function assetFor( test )
     _DISCONNECT_DELAY_ : debugged ? 30000 : 3000,
   }
   a.env = _.mapExtend( null, process.env, envExtension );
-  a.js = a.process.starter
+  a.appStart = a.process.starter
   ({
     execPath : context.appJsPath || null,
     currentPath : a.routinePath,
@@ -96,7 +96,7 @@ function basic( test )
 
   /* */
 
-  a.js({ execPath : a.centerPath })
+  a.appStart({ execPath : a.centerPath })
 
   .then( ( got ) =>
   {
@@ -160,7 +160,7 @@ function manyMessages( test )
     return null;
   })
 
-  a.js({ execPath : a.centerPath })
+  a.appStart({ execPath : a.centerPath })
 
   .then( ( got ) =>
   {
@@ -223,7 +223,7 @@ function slaveCallMaster( test )
     return null;
   })
 
-  a.js({ execPath : a.centerPath })
+  a.appStart({ execPath : a.centerPath })
 
   .then( ( got ) =>
   {
@@ -280,7 +280,7 @@ function masterCallSlave( test )
     return null;
   })
 
-  a.js({ execPath : a.centerPath })
+  a.appStart({ execPath : a.centerPath })
 
   .then( ( got ) =>
   {

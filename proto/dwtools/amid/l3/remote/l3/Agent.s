@@ -777,14 +777,17 @@ function slaveDisconnectMaster()
     let process = agent._process;
     agent._process = null;
     process.disconnect();
-    
-    process.onTerminate.catch( err => 
+
+    /* yyy */
+    process.onTerminate.catch( err =>
     {
       if( err.reason != 'disconnected' )
       throw err;
       _.errAttend( err );
       return process;
     })
+    /* yyy */
+
   }
 
 }
