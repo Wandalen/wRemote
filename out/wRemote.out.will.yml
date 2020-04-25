@@ -164,8 +164,12 @@ module:
           - ../proto/dwtools/amid/-l3/remote/l1
           - ../proto/dwtools/amid/-l3/remote/l1/Namespace.s
           - ../proto/dwtools/amid/-l3/remote/l3
+          - ../proto/dwtools/amid/-l3/remote/l3/Agent.s
           - ../proto/dwtools/amid/-l3/remote/l3/Flock.s
           - ../proto/dwtools/amid/-l3/remote/l3/Representative.s
+          - ../proto/dwtools/amid/-l3/remote/l5
+          - ../proto/dwtools/amid/-l3/remote/l5/Master.s
+          - ../proto/dwtools/amid/-l3/remote/l5/Slave.s
           - ../proto/dwtools/amid/-l3.test
           - ../proto/dwtools/amid/-l3.test/remote
           - ../proto/dwtools/amid/-l3.test/remote/Ext.test.s
