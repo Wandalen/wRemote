@@ -2,7 +2,7 @@
   "name" : "wremote",
   "version" : "0.3.32",
   "description" : "Abstract interface of connection between several procedures",
-  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/dwtools/amid/l3/rmeote/Include.s",
   "files" : [ "proto/dwtools/amid/l3", "proto/dwtools/Tools.s" ],
