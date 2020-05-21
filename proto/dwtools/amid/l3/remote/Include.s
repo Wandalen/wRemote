@@ -4,7 +4,7 @@
   @module Tools/mid/Remote
 */
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 {
 
   require( './include/Mid.s' );

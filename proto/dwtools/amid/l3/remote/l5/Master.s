@@ -117,7 +117,7 @@ _.classDeclare
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 _.remote[ Self.shortName ] = Self;
 
