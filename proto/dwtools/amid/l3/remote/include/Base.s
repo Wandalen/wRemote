@@ -14,7 +14,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wFiles' );
   _.include( 'wConsequence' );
   _.include( 'wAppBasic' );
-  _.include( 'wGdfStrategy' );
+  _.include( 'wGdf' );
 
 }
 
