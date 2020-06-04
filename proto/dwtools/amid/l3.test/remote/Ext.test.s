@@ -23,7 +23,7 @@ function onSuiteBegin()
   let context = this;
 
   context.suiteTempPath = path.pathDirTempOpen( path.join( __dirname, '../..'  ), 'remote' );
-  context.assetsOriginalSuitePath = path.join( __dirname, '_assets' );
+  context.assetsOriginalPath = path.join( __dirname, '_assets' );
 
 }
 
@@ -334,7 +334,7 @@ var Self =
   context :
   {
     suiteTempPath : null,
-    assetsOriginalSuitePath : null,
+    assetsOriginalPath : null,
     appJsPath : null,
     assetFor,
   },
