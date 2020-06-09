@@ -19,7 +19,7 @@
     "wEventHandler" : "",
     "wFiles" : "",
     "wConsequence" : "",
-    "wappbasic" : ""
+    "wprocess" : ""
   },
   "devDependencies" : { "wTesting" : "", "wpuppet" : "" },
   "keywords" : [ "wTools" ]

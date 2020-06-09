@@ -19,7 +19,7 @@
     "wEventHandler" : "alpha",
     "wFiles" : "alpha",
     "wConsequence" : "alpha",
-    "wappbasic" : "alpha"
+    "wprocess" : "alpha"
   },
   "devDependencies" : { "wTesting" : "alpha", "wpuppet" : "alpha" },
   "keywords" : [ "wTools" ]

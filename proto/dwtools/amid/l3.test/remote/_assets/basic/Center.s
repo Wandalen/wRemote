@@ -17,7 +17,8 @@ if( typeof module !== 'undefined' )
 
 var _ = _global_.wTools;
 let Parent = null;
-let Self = function wStarterCenter( o )
+let Self = wStarterCenter;
+function wStarterCenter( o )
 {
   // debugger;
   // if( !( context instanceof cls ) )

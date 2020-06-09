@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wEventHandler' );
   _.include( 'wFiles' );
   _.include( 'wConsequence' );
-  _.include( 'wAppBasic' );
+  _.include( 'wProcess' );
   _.include( 'wGdf' );
 
 }

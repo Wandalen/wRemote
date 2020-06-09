@@ -11,7 +11,8 @@ if( typeof module !== 'undefined' )
 
 let _ = _global_.wTools;
 let Parent = _.remote.Agent;
-let Self = function wRemoteAgentSlave( o )
+let Self = wRemoteAgentSlave;
+function wRemoteAgentSlave( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
