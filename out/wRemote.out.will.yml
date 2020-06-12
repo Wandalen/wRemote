@@ -3,8 +3,8 @@ root:
   - wRemote.out
 consistency:
   ../.ex.will.yml: &ref_0
-    hash: 5de854c002287126d50ca0ad78ffc7e0
-    size: 1709
+    hash: 2750f3f418441cc85e311bc55fe15e83
+    size: 1710
   ../.im.will.yml: &ref_1
     hash: 33d8c588901e1c661f624fdd59935357
     size: 5154
@@ -1532,8 +1532,8 @@ module:
           - 'build::npm'
     consistency:
       ../.ex.will.yml:
-        hash: 5de854c002287126d50ca0ad78ffc7e0
-        size: 1709
+        hash: 2750f3f418441cc85e311bc55fe15e83
+        size: 1710
       ../.im.will.yml:
         hash: 33d8c588901e1c661f624fdd59935357
         size: 5154
