@@ -370,7 +370,7 @@ function _deserialize( o )
   let agent = this;
   let flock = agent.flock;
   let logger = flock.logger;
-  let converters = _.Gdf.Select({ in : 'string', out : 'structure', ext : 'json', default : 1 })
+  let converters = _.gdf.select({ in : 'string', out : 'structure', ext : 'json', default : 1 })
   let converter = converters[ 0 ];
   let result = [];
 
