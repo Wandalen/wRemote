@@ -22,7 +22,7 @@ function onSuiteBegin()
 {
   let context = this;
 
-  context.suiteTempPath = path.pathDirTempOpen( path.join( __dirname, '../..'  ), 'remote' );
+  context.suiteTempPath = path.tempOpen( path.join( __dirname, '../..'  ), 'remote' );
   context.assetsOriginalPath = path.join( __dirname, '_assets' );
 
 }
@@ -33,7 +33,7 @@ function onSuiteEnd()
 {
   let context = this;
   _.assert( _.strHas( context.suiteTempPath, '/remote-' ) )
-  path.pathDirTempClose( context.suiteTempPath );
+  path.tempClose( context.suiteTempPath );
 }
 
 //
