@@ -1,5 +1,5 @@
 
-# wRemote [![Build Status](https://travis-ci.org/Wandalen/wRemote.svg?branch=master)](https://travis-ci.org/Wandalen/wRemote)
+# module::Remote [![Status](https://github.com/Wandalen/wRemote/workflows/Test/badge.svg)](https://github.com/Wandalen/wRemote}/actions?query=workflow%3ATest)
 
 Abstract interface of connection between several procedures
 
