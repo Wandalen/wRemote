@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - wRemote.out
 consistency:
-  wRemote.out.will.yml: &ref_0
-    hash: 1865c1378b9fd1a0c11689eab4024f34
-    size: 41403
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 2750f3f418441cc85e311bc55fe15e83
     size: 1710
-  ../.im.will.yml: &ref_2
-    hash: 33d8c588901e1c661f624fdd59935357
-    size: 5154
+  ../.im.will.yml: &ref_1
+    hash: 0cf90be1a3d1082a13d6b7783fbc1716
+    size: 5152
 module:
   wRemote.out:
     about:
@@ -19,19 +16,19 @@ module:
       description: Abstract interface of connection between several procedures
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - tools
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wremote
-      npm.scripts:
+      npm.scripts: &ref_5
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -209,11 +206,9 @@ module:
           - ../proto/wtools/amid/l3.test/remote/_assets/manyMessages
           - ../proto/wtools/amid/l3.test/remote/_assets/manyMessages/Center.s
           - ../proto/wtools/amid/l3.test/remote/_assets/masterCallSlave
-          - >-
-            ../proto/wtools/amid/l3.test/remote/_assets/masterCallSlave/Center.s
+          - ../proto/wtools/amid/l3.test/remote/_assets/masterCallSlave/Center.s
           - ../proto/wtools/amid/l3.test/remote/_assets/slaveCallMaster
-          - >-
-            ../proto/wtools/amid/l3.test/remote/_assets/slaveCallMaster/Center.s
+          - ../proto/wtools/amid/l3.test/remote/_assets/slaveCallMaster/Center.s
           - ../proto/wtools/atop
     submodule:
       wTools:
@@ -665,7 +660,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.raw'
         criterion:
           tests: no.tests
           debug: debug
@@ -675,7 +670,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.raw'
         criterion:
           tests: no.tests
           debug: release
@@ -685,7 +680,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.compiled'
         criterion:
           tests: no.tests
           debug: debug
@@ -695,7 +690,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.compiled'
         criterion:
           tests: no.tests
           debug: release
@@ -706,7 +701,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          filePath: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw'
         criterion:
           raw: raw
           debug: release
@@ -716,7 +711,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.debug'
         criterion:
           tests: no.tests
           raw: compiled
@@ -727,7 +722,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.release'
         criterion:
           tests: no.tests
           raw: compiled
@@ -739,7 +734,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.debug'
         criterion:
           tests: only.tests
           raw: compiled
@@ -751,7 +746,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.release'
         criterion:
           tests: only.tests
           raw: compiled
@@ -759,24 +754,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -865,9 +842,8 @@ module:
           content: proto
           export: 1
     consistency:
-      wRemote.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wRemote
@@ -875,21 +851,13 @@ module:
       description: Abstract interface of connection between several procedures
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - tools
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+      contributors: *ref_4
       npm.name: wremote
-      npm.scripts:
-        test: wtest .run proto/**
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -1566,6 +1534,5 @@ module:
         hash: 2750f3f418441cc85e311bc55fe15e83
         size: 1710
       ../.im.will.yml:
-        hash: 33d8c588901e1c661f624fdd59935357
-        size: 5154
-      wRemote.out.will.yml: *ref_0
+        hash: 0cf90be1a3d1082a13d6b7783fbc1716
+        size: 5152
