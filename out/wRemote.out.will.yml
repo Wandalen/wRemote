@@ -1566,6 +1566,4 @@ module:
       ../.im.will.yml:
         hash: 0cf90be1a3d1082a13d6b7783fbc1716
         size: 5152
-      wRemote.out.will.yml:
-        hash: 43f3ebce3be36d37480fc3734f789a65
-        size: 41494
+      wRemote.out.will.yml: *ref_0
