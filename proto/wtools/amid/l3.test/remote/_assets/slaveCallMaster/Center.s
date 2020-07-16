@@ -8,14 +8,14 @@ var _DisconnectDelay_ = Number( process.env._DISCONNECT_DELAY_ ) || 10000;
 
 if( typeof module !== 'undefined' )
 {
-  var _ = require( _ToolsPath_ );
+  let _ = require( _ToolsPath_ );
   _.include( _RemotePath_ );
   module.exports = _;
 }
 
 //
 
-var _ = _global_.wTools;
+let _ = _global_.wTools;
 let Parent = null;
 let Self = wStarterCenter;
 function wStarterCenter( o )

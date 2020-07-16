@@ -321,7 +321,7 @@ masterCallSlave.description =
 // declare
 // --
 
-var Self =
+let Self =
 {
 
   name : 'Tools.mid.Remote',
