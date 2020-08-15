@@ -370,8 +370,7 @@ function _deserialize( o )
   let agent = this;
   let flock = agent.flock;
   let logger = flock.logger;
-  let converters = _.gdf.select({ in : 'string', out : 'structure', ext : 'json', default : 1 })
-  let converter = converters[ 0 ];
+  let converter = _.gdf.selectSingleContext({ inFormat : 'string', outFormat : 'structure', ext : 'json', single : 1 })
   let result = [];
 
   if( _.bufferAnyIs( o.data ) )
@@ -388,6 +387,7 @@ function _deserialize( o )
       let sizeStr = String( size );
       let current = left.substring( sizeStr.length + 1, sizeStr.length + size + 1 );
       left = left.substring( sizeStr.length + size + 1, left.length );
+      debugger;
       let deserialized = converter.encode({ data : current });
       _.assert( _.mapIs( deserialized.data ) );
       // let deserialized = JSON.parse( o.data );
