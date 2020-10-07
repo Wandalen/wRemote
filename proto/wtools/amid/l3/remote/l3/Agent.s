@@ -664,7 +664,7 @@ function slaveOpenMaster()
   _.assert( _.strDefined( flock.entryPath ) );
   _.assert( agent._process === null );
 
-  let result = agent._process = _.process.startNode
+  let result = agent._process = _.process.startNjs
   ({
     execPath : flock.entryPath,
     args : `role:master masterPath:${flock.masterPath}`,
