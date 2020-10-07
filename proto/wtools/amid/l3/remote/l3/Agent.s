@@ -780,7 +780,7 @@ function slaveDisconnectMaster()
     process.disconnect();
 
     /* yyy */
-    process.onTerminate.catch( err =>
+    process.conTerminate.catch( err =>
     {
       if( err.reason != 'disconnected' )
       throw err;
