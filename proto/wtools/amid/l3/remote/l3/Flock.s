@@ -186,7 +186,7 @@ function _roleDetermine()
 
   _.assert( flock.role === null );
 
-  let args = _.process.args();
+  let args = _.process.input();
 
   if( args.map.role !== undefined )
   {
