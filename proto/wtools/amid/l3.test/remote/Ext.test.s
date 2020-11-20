@@ -90,7 +90,7 @@ function basic( test )
   .then( () =>
   {
     test.case = 'basic';
-    test.is( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
+    test.true( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
     return null;
   })
 
@@ -156,7 +156,7 @@ function manyMessages( test )
   .then( () =>
   {
     test.case = 'basic';
-    test.is( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
+    test.true( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
     return null;
   })
 
@@ -219,7 +219,7 @@ function slaveCallMaster( test )
   .then( () =>
   {
     test.case = 'basic';
-    test.is( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
+    test.true( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
     return null;
   })
 
@@ -276,7 +276,7 @@ function masterCallSlave( test )
   .then( () =>
   {
     test.case = 'basic';
-    test.is( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
+    test.true( _.numberIs( _.remote.Flock.prototype.Composes.terminationPeriod ) );
     return null;
   })
 
