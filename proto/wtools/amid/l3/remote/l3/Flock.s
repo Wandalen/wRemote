@@ -297,7 +297,7 @@ function localHandlesAdd( o )
 
   _.routineOptions( localHandlesAdd, arguments );
 
-  let result = _.map( o.objects, ( object, k ) =>
+  let result = _.map_( null, o.objects, ( object, k ) =>
   {
     if( _.numberIs( k ) )
     return flock._localHandleAdd({ object });
@@ -370,7 +370,7 @@ function localHandlesRemoveObjects( objects )
 
   _.routineOptions( localHandlesRemoveObjects, arguments );
 
-  let result = _.map( objects, ( object, k ) =>
+  let result = _.map_( null, objects, ( object, k ) =>
   {
     return flock.localHandlesRemoveObject( object );
   });
