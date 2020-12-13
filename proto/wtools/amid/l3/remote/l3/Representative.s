@@ -136,20 +136,20 @@ handleToTwin.defaults =
 
 //
 
-function TwinProxyGet( op, fieldName, proxy )
+function TwinProxyGet( op, propName, proxy )
 {
   let representative = op.representative;
   let handle = op.handle;
   let flock = representative.flock;
 
-  if( fieldName === twinSymbol )
+  if( propName === twinSymbol )
   return op;
-  if( _.symbolIs( fieldName ) )
+  if( _.symbolIs( propName ) )
   return undefined;
 
   let r =
   {
-    [ fieldName ] : function()
+    [ propName ] : function()
     {
       _.assert( this === proxy );
       return flock.agent.requestCall
@@ -157,18 +157,18 @@ function TwinProxyGet( op, fieldName, proxy )
         recipient : representative.agentPath,
         object : handle,
         context : this,
-        routine : fieldName,
+        routine : propName,
         args : arguments,
       }).ready;
     }
   }
 
-  return r[ fieldName ];
+  return r[ propName ];
 }
 
 //
 
-function TwinProxySet( op, fieldName, value, proxy )
+function TwinProxySet( op, propName, value, proxy )
 {
   debugger;
   _.assert( 0 );
