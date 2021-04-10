@@ -2,8 +2,8 @@
 
 'use strict';
 
-let _ = _global_.wTools;
-let Self = _.remote = _.remote || Object.create( null );
+const _ = _global_.wTools;
+const Self = _.remote = _.remote || Object.create( null );
 
 // --
 // inter

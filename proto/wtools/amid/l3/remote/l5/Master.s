@@ -9,9 +9,9 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = _global_.wTools;
-let Parent = _.remote.Agent;
-let Self = wRemoteAgentMaster;
+const _ = _global_.wTools;
+const Parent = _.remote.Agent;
+const Self = wRemoteAgentMaster;
 function wRemoteAgentMaster( o )
 {
   return _.workpiece.construct( Self, this, arguments );

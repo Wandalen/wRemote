@@ -8,7 +8,7 @@ Abstract interface of connection between several procedures
 git clone https://github.com/Wandalen/wRemote
 cd wRemote
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 ```
 
 ## To add to your project

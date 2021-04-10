@@ -153,7 +153,7 @@ module:
           - ../proto
           - ../proto/Integration.test.ss
           - ../proto/wtools
-          - ../proto/wtools/Tools.s
+          - ../proto/node_modules/Tools
           - ../proto/wtools/abase
           - ../proto/wtools/amid
           - ../proto/wtools/amid/l3

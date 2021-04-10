@@ -4,9 +4,9 @@
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wRemoteFlock;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wRemoteFlock;
 function wRemoteFlock( o )
 {
   return _.workpiece.construct( Self, this, arguments );

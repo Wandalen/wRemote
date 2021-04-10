@@ -5,7 +5,7 @@
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/wtools/amid/l3/rmeote/Include.s",
-  "files" : [ "proto/wtools/amid/l3", "proto/wtools/Tools.s" ],
+  "files" : [ "proto/wtools/amid/l3", "proto/node_modules/Tools" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen .build proto" },
   "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wRemote.git" },
   "bugs" :

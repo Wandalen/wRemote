@@ -9,9 +9,9 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wRemoteAgent;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wRemoteAgent;
 function wRemoteAgent( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -347,7 +347,7 @@ function _serialize( o )
   try
   {
     _.assert( _.strDefined( o.channel ), 'Channel is not specified' );
-    serialized = _.toJson( o );
+    serialized = _.entity.exportJson( o );
     serialized = serialized.length + ' ' + serialized;
   }
   catch( err )

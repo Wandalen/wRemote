@@ -4,9 +4,9 @@
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wRepresentative;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wRepresentative;
 function wRepresentative( o )
 {
   return _.workpiece.construct( Self, this, arguments );

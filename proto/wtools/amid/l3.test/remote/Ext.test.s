@@ -4,14 +4,15 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../../wtools/Tools.s' );
+  const _ = require( '../../../../node_modules/Tools' );
   _.include( 'wTesting' );
   require( '../../l3/remote/Include.s' );
 }
 
-let _ = _global_.wTools;
-let fileProvider = _globals_.testing.wTools.fileProvider;
-let path = fileProvider.path;
+const _ = _global_.wTools;
+const __ = _globals_.testing.wTools;
+const fileProvider = __.fileProvider;
+const path = fileProvider.path;
 let debugged = _.process.isDebugged();
 
 // --
@@ -321,7 +322,7 @@ masterCallSlave.description =
 // declare
 // --
 
-let Self =
+const Proto =
 {
 
   name : 'Tools.mid.Remote',
@@ -351,7 +352,7 @@ let Self =
 
 }
 
-Self = wTestSuite( Self );
+const Self = wTestSuite( Proto );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
