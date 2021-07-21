@@ -6,7 +6,7 @@ if( typeof module !== 'undefined' )
 {
   const _ = require( '../../../../node_modules/Tools' );
   _.include( 'wTesting' );
-  require( '../../l3/remote/Include.s' );
+  require( '../../l3/remote/include/Mid.s' );
 }
 
 const _ = _global_.wTools;
@@ -324,10 +324,10 @@ masterCallSlave.description =
 
 const Proto =
 {
-
-  name : 'Tools.mid.Remote',
+  name : 'Tools.mid.Remote.Ext',
   silencing : 1,
   routineTimeOut : 60000,
+  enabled : 0,
 
   onSuiteBegin,
   onSuiteEnd,
@@ -349,7 +349,6 @@ const Proto =
     masterCallSlave,
 
   }
-
 }
 
 const Self = wTestSuite( Proto );

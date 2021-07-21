@@ -63,6 +63,19 @@ function agentPathFromRole( role, id )
   return `/${role}${id}`;
 }
 
+//
+
+const attemptDefaults =
+{
+  attemptLimit : 3,
+  attemptDelay : 100,
+  attemptDelayMultiplier : 1,
+};
+
+_.assert( attemptDefaults.attemptLimit >= 1 );
+_.assert( attemptDefaults.attemptDelay >= 0 );
+_.assert( attemptDefaults.attemptDelay >= 1 );
+
 // --
 // declare
 // --
@@ -75,7 +88,9 @@ let Extension =
   idFromAgentPath,
   agentPathFromRole,
 
-}
+  attemptDefaults,
+
+};
 
 _.mapExtend( Self, Extension );
 
