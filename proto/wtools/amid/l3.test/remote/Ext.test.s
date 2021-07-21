@@ -324,10 +324,10 @@ masterCallSlave.description =
 
 const Proto =
 {
-
-  name : 'Tools.mid.Remote',
+  name : 'Tools.mid.Remote.Ext',
   silencing : 1,
   routineTimeOut : 60000,
+  enabled : 0,
 
   onSuiteBegin,
   onSuiteEnd,
@@ -349,7 +349,6 @@ const Proto =
     masterCallSlave,
 
   }
-
 }
 
 const Self = wTestSuite( Proto );
