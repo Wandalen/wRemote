@@ -4,8 +4,8 @@
   "description" : "Abstract interface of connection between several procedures",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
-  "main" : "proto/wtools/node_modules/wremote",
-  "files" : [ "proto/wtools/amid/l3", "proto/node_modules/Tools", "proto/wtools/node_modules/wremote" ],
+  "main" : "proto/node_modules/wremote",
+  "files" : [ "proto/wtools/amid/l3", "proto/node_modules/Tools", "proto/node_modules/wremote" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen .build proto" },
   "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wRemote.git" },
   "bugs" :

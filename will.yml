@@ -55,7 +55,7 @@ path:
       raw: compiled
       content: prime
   entry.proto.no.tests:
-    path: proto/wtools/amid/l3/remote/Include.s
+    path: proto/wtools/amid/l3/remote/include/Include.s
     criterion:
       tests: no.tests
   entry.proto.only.tests:
