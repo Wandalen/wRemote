@@ -1,7 +1,7 @@
 about:
   name: wRemote
   description: Abstract interface of connection between several procedures
-  version: 0.4.0
+  version: 0.5.0
   enabled: 0
   interpreters:
     - njs >= 10.0.0
