@@ -16,7 +16,7 @@ about:
     - Kostiantyn Wandalen <wanalen@01.school>
   npm.name: wremote
   npm.scripts:
-    test: wtest .run proto/**
+    test: wtest .run "proto/**" rapidity:-1
     docgen: wdocgen .build proto
 path:
   repository: 'git+https:///github.com/Wandalen/wRemote.git'
