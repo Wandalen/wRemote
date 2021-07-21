@@ -3,7 +3,7 @@ root:
   - wRemote.out
 consistency:
   ../will.yml: &ref_0
-    hash: e03184087e9af7bdd2eb735c391452c6
+    hash: 4cb6187d8e85a0065d93beb8ccbda311
     size: 6600
 module:
   wRemote.out:
@@ -12,7 +12,7 @@ module:
       org: noorg
       description: Abstract interface of connection between several procedures
       enabled: 0
-      version: 0.4.0
+      version: 0.5.0
       interpreters: &ref_1
         - njs >= 10.0.0
         - chrome >= 60.0.0
@@ -801,7 +801,7 @@ module:
           - 'build::npm'
     exported:
       proto.export:
-        version: 0.4.0
+        version: 0.5.0
         recursive: 0
         withIntegrated: 2
         tar: 0
@@ -820,7 +820,7 @@ module:
       org: noorg
       description: Abstract interface of connection between several procedures
       enabled: 0
-      version: 0.4.0
+      version: 0.5.0
       interpreters: *ref_1
       keywords: *ref_2
       license: MIT
@@ -1504,5 +1504,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: e03184087e9af7bdd2eb735c391452c6
+        hash: 4cb6187d8e85a0065d93beb8ccbda311
         size: 6600
