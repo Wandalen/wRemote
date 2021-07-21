@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
 {
   const _ = require( '../../../../node_modules/Tools' );
   _.include( 'wTesting' );
-  require( '../../l3/remote/Include.s' );
+  require( '../../l3/remote/include/Mid.s' );
 }
 
 const _ = _global_.wTools;
