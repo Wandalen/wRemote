@@ -11,7 +11,6 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wCopyable' );
   _.include( 'wEventHandler' );
-  _.include( 'wFiles' );
   _.include( 'wConsequence' );
   _.include( 'wProcess' );
   _.include( 'wGdf' );
