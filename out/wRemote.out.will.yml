@@ -3,8 +3,8 @@ root:
   - wRemote.out
 consistency:
   ../will.yml: &ref_0
-    hash: 4cb6187d8e85a0065d93beb8ccbda311
-    size: 6600
+    hash: 0a9d376d9a42c93daa46e4c880095cc0
+    size: 6549
 module:
   wRemote.out:
     about:
@@ -186,10 +186,6 @@ module:
         enabled: 0
       wEventHandler:
         path: 'npm:///wEventHandler'
-        autoExporting: 0
-        enabled: 0
-      wFiles:
-        path: 'npm:///wFiles'
         autoExporting: 0
         enabled: 0
       wConsequence:
@@ -942,10 +938,6 @@ module:
         path: 'npm:///wEventHandler'
         autoExporting: 0
         enabled: 0
-      wFiles:
-        path: 'npm:///wFiles'
-        autoExporting: 0
-        enabled: 0
       wConsequence:
         path: 'npm:///wConsequence'
         autoExporting: 0
@@ -1504,5 +1496,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 4cb6187d8e85a0065d93beb8ccbda311
-        size: 6600
+        hash: 0a9d376d9a42c93daa46e4c880095cc0
+        size: 6549
