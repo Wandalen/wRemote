@@ -1,6 +1,6 @@
 {
   "name": "wremote",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Abstract interface of connection between several procedures",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "license": "MIT",
@@ -22,15 +22,15 @@
     "url": "https ://github.com/Wandalen/wRemote/issues"
   },
   "dependencies": {
-    "wTools": "latest",
-    "wprocess": "latest",
-    "wEventHandler": "latest",
-    "wCopyable": "latest",
-    "wConsequence": "latest"
+    "wTools": "delta",
+    "wprocess": "delta",
+    "wEventHandler": "delta",
+    "wCopyable": "delta",
+    "wConsequence": "delta"
   },
   "devDependencies": {
-    "wTesting": "latest",
-    "wpuppet": "latest",
+    "wTesting": "delta",
+    "wpuppet": "delta",
     "eslint": "7.1.0"
   },
   "keywords": [
