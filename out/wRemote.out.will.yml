@@ -3,7 +3,7 @@ root:
   - wRemote.out
 consistency:
   ../will.yml: &ref_0
-    hash: 0a9d376d9a42c93daa46e4c880095cc0
+    hash: 14a2fb9a810d297984b94f391fa6f6ee
     size: 6549
 module:
   wRemote.out:
@@ -11,7 +11,7 @@ module:
       name: wRemote
       org: noorg
       description: Abstract interface of connection between several procedures
-      enabled: 0
+      enabled: 1
       version: 0.5.0
       interpreters: &ref_1
         - njs >= 10.0.0
@@ -815,7 +815,7 @@ module:
       name: wRemote
       org: noorg
       description: Abstract interface of connection between several procedures
-      enabled: 0
+      enabled: 1
       version: 0.5.0
       interpreters: *ref_1
       keywords: *ref_2
@@ -1496,5 +1496,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 0a9d376d9a42c93daa46e4c880095cc0
+        hash: 14a2fb9a810d297984b94f391fa6f6ee
         size: 6549
