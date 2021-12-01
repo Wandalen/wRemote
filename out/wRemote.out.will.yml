@@ -21,9 +21,9 @@ module:
         - tools
         - wTools
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@obox.systems>
       contributors: &ref_3
-        - Kostiantyn Wandalen <wanalen@01.school>
+        - Kostiantyn Wandalen <wandalen@obox.systems>
       npm.name: wremote
       npm.scripts: &ref_4
         test: 'wtest .run "proto/**" rapidity:-1'
@@ -811,7 +811,7 @@ module:
       interpreters: *ref_1
       keywords: *ref_2
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wandalen@obox.systems>
       contributors: *ref_3
       npm.name: wremote
       npm.scripts: *ref_4
