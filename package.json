@@ -1,6 +1,6 @@
 {
   "name": "wremote",
-  "version": "0.4.27",
+  "version": "0.4.28",
   "description": "Abstract interface of connection between several procedures",
   "author": "Kostiantyn Wandalen <wandalen@obox.systems>",
   "license": "MIT",
